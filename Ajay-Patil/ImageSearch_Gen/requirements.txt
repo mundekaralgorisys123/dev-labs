@@ -1,0 +1,6 @@
+numpy
+pillow
+tensorflow
+flask
+gradio
+openai

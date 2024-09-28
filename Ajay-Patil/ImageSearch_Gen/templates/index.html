@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Search & Generate</title>
+    <link rel="stylesheet" href="../static/style/styles.css"> <!-- Sidebar CSS -->
+    <link rel="stylesheet" href="../static/style/style_ind.css"> <!-- Main content CSS -->
+</head>
+<body>
+    <div class="sidebar-container">
+        <!-- Sidebar with centered links -->
+        <div class="sidebar">
+            <ul>
+                <li><a href="/search">Image Search</a></li>
+                <li><a href="/generate">Image Generate</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content area -->
+    <div class="main-content">
+        <h1 class="welcome-heading">Hello, Welcome!</h1>
+        <p class="description">What would you like to do today?</p>
+        
+        <div class="navigation-cards">
+            <div class="nav-card" onclick="window.location.href='/search'">
+                <h2>Search Similar Images</h2>
+                <p>Find images that match your query.</p>
+            </div>
+            <div class="nav-card" onclick="window.location.href='/generate'">
+                <h2>Generate Images</h2>
+                <p>Create images using various models and prompts.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

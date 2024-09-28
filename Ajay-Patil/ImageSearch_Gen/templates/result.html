@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Search & Generate</title>
+    <link rel="stylesheet" href="../static/style/styles.css"> <!-- Sidebar CSS -->
+    <link rel="stylesheet" href="../static/style/style_res.css"> <!-- Main content CSS -->
+</head>
+<body>
+    <div class="sidebar-container">
+        <!-- Sidebar with centered links -->
+        <div class="sidebar">
+            <ul>
+                <li><a href="/search">Image Search</a></li>
+                <li><a href="/generate">Image Generate</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content area -->
+    <div class="main-container">
+        <div class="column">
+            <h1 class="heading">Generated Using Prodia</h1>
+            <div class="image-grid">
+                {% for generated_image_path in generated_images %}
+                <div class="image-container">
+                    <div class="download-icon-container">
+                        <a href="{{ generated_image_path }}" class="download-link" download>
+                            <img src="../static/icons/download.svg" alt="Download" class="download-icon">
+                        </a>
+                    </div>
+                    <img src="{{ generated_image_path }}" alt="Generated Image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="column">
+            <h1 class="heading">Generated Using OpenAI</h1>
+            <div class="image-grid">
+                {% for generated_image_path in image_urls %}
+                <div class="image-container">
+                    <div class="download-icon-container">
+                        <a href="{{ generated_image_path }}" class="download-link" download>
+                            <img src="../static/icons/download.svg" alt="Download" class="download-icon">
+                        </a>
+                    </div>
+                    <img src="{{ generated_image_path }}" alt="Generated Image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="nav-button-container">
+            <a href="/generate" class="nav-button">Generate Another Image</a>
+        </div>
+    </div>
+    <script src="../static/js/script.js"></script>
+</body>
+</html>
