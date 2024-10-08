@@ -5,7 +5,9 @@ document.querySelectorAll('.download-link').forEach(link => {
         const url = this.href;
         const filename = url.substring(url.lastIndexOf('/') + 1);
 
-        fetch(url)
+        fetch(url,
+            {mode:'cors'}
+        )
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok.');
@@ -29,3 +31,4 @@ document.querySelectorAll('.download-link').forEach(link => {
             });
     });
 });
+

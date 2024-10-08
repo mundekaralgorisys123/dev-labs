@@ -8,16 +8,17 @@ from feature_extractor import FeatureExtractor  # Importing feature extraction c
 from datetime import datetime 
 from dotenv import load_dotenv
 from io import BytesIO
+import base64
 import json
 from prodia_client import Prodia, image_to_base64, validate_params  # Import from prodia_client.py
-from pathlib import Path  # Path handling for filesystem operations
+from pathlib import Path  # Path handling for filesystem operation
+
 
 # Load environment variables from a .env file
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-
 # Initialize Prodia API client with the API key
 prodia_client = Prodia(api_key=os.getenv('PRODIA_API_KEY'))
 model_names = prodia_client.list_models()
@@ -30,6 +31,13 @@ for feature_path in Path("./static/feature").glob("*.npy"):  # Loop through all 
     features.append(np.load(feature_path))  # Load feature vector from .npy file
     img_paths.append(Path("./static/img") / (feature_path.stem + ".jpg"))  # Create path for the corresponding image
 features = np.array(features)  # Convert feature list to a NumPy array for vectorized operations
+
+# Convert image to base64 string
+def image_to_base64_str(image):
+    buffer = BytesIO()
+    image.save(buffer, format='PNG')
+    buffer.seek(0)
+    return base64.b64encode(buffer.read()).decode('utf-8')
 
 # Generate image from text prompt using Prodia API
 def txt2img(prompt, negative_prompt, model, steps, sampler, cfg_scale, width, height, seed):
@@ -150,6 +158,9 @@ def generate_images():
                     generated_images.append(result)
 
                 input_image = request.files.get('input-image', None)
+                number_of_images = int(number_of_images)
+                if number_of_images > 5:
+                    number_of_images = 5
                 response = openai.Image.create_variation(
                     model="dall-e-2",
                     image=process_image(input_image.stream),
@@ -157,6 +168,7 @@ def generate_images():
                     size="1024x1024"
                 )
                 image_urls = [image['url'] for image in response['data']]
+                
             
             else:
                 # Handle txt2img if no image is uploaded
@@ -176,6 +188,9 @@ def generate_images():
                     )
                     generated_images.append(result)
 
+                number_of_images = int(number_of_images)
+                if number_of_images > 5:
+                    number_of_images = 5
                 # Generate images using OpenAI's DALL-E API
                 response = openai.Image.create(
                     model="dall-e-2",
@@ -198,11 +213,7 @@ def generate_images():
 def search_image():
     if request.method == 'POST':  # If the form is submitted (via POST request)
         file = request.files['query_img']  # Get the uploaded image file from the request
-
-        # Save the uploaded query image with a unique timestamp-based name
         img = Image.open(file.stream)  # Open the uploaded image using PIL
-        uploaded_img_path = "static/uploaded/" + datetime.now().isoformat().replace(":", ".") + "_" + file.filename
-        img.save(uploaded_img_path)  # Save the image in the 'static/uploaded/' directory
 
         # Run image similarity search
         query = fe.extract(img)  # Extract features from the uploaded query image
@@ -210,11 +221,10 @@ def search_image():
         ids = np.argsort(dists)[1:6]  # Get the indices of the top 40 closest (most similar) images based on distance
         scores = [(dists[id], img_paths[id]) for id in ids]  # Pair distances with image paths for top results
 
-        return render_template('search.html',
-                               query_path=uploaded_img_path,  # Show the uploaded image
-                               scores=scores)  # Display the top 40 similar images and their scores
+        return render_template('search.html', query_path=image_to_base64_str(img), scores=scores)  # Pass base64 image string
     else:
-        return render_template('search.html',query_path=None,scores=None)  # Render the default homepage on GET request
+        return render_template('search.html', query_path=None, scores=None)  # Render the default homepage on GET request
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,7 +1,11 @@
+import tensorflow
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.vgg19 import VGG19, preprocess_input  # Import VGG19 instead of VGG16
 from tensorflow.keras.models import Model
 import numpy as np
+
+tensorflow.config.threading.set_inter_op_parallelism_threads(4)
+tensorflow.config.threading.set_intra_op_parallelism_threads(4)
 
 class FeatureExtractor:
     def __init__(self):
