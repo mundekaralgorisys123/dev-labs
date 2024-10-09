@@ -1,141 +1,230 @@
-// email.js
-
-import dotenv from "dotenv";
 import Imap from "imap";
+import fs from "fs";
 import { simpleParser } from "mailparser";
 import { PrismaClient } from "@prisma/client";
+import dotenv from "dotenv";
 
 dotenv.config();
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient(); // Initialize Prisma client
 
-async function storeEmailInDatabase(emailData) {
-  try {
-    const existingEmail = await prisma.email.findFirst({
-      where: {
-        from: emailData.from,
-        subject: emailData.subject,
-        date: emailData.date,
-      },
-    });
+class MailAttachmentFetcher {
+  constructor(emailConfig, localFolderPath) {
+    this.emailConfig = emailConfig;
+    this.localFolderPath = localFolderPath;
 
-    if (existingEmail) {
-      console.log("Email already exists in database, skipping insert.");
-      return existingEmail;
+    // Check if the folder exists, if not, create it
+    if (!fs.existsSync(localFolderPath)) {
+      fs.mkdirSync(localFolderPath, { recursive: true });
     }
 
-    const storedEmail = await prisma.email.create({
-      data: {
-        from: emailData.from,
-        to: emailData.to,
-        subject: emailData.subject || "",
-        date: emailData.date,
-        bodyText: emailData.bodyText || "",
-      },
-    });
-    console.log("Email stored in database successfully.");
-    return storedEmail;
-  } catch (error) {
-    console.error("Error storing email in database:", error);
-    throw error;
+    // Instantiate IMAP and bind methods
+    this.imap = new Imap(emailConfig);
+    this.imap.once("ready", this.onImapReady.bind(this));
+    this.imap.once("error", this.onImapError.bind(this));
+    this.imap.once("end", this.onImapEnd.bind(this));
   }
-}
 
-function openInbox(imap, callback) {
-  imap.openBox("INBOX", true, callback);
-}
+  async storeAccount() {
+    try {
+      const existingAccount = await prisma.account.findUnique({
+        where: { email: this.emailConfig.user },
+      });
 
-export async function fetchEmailsForAccount(account, page, pageSize) {
-  return new Promise((resolve, reject) => {
-    console.log(`Connecting to account: ${account.user}`);
+      if (!existingAccount) {
+        // Create new account entry if it doesn't exist
+        await prisma.account.create({
+          data: {
+            email: this.emailConfig.user,
+          },
+        });
+        console.log(`Stored account: ${this.emailConfig.user}`);
+      } else {
+        console.log(`Account already exists: ${this.emailConfig.user}`);
+      }
+    } catch (error) {
+      console.error("Error storing account:", error);
+    }
+  }
 
-    const imap = new Imap({
-      user: account.user,
-      password: account.password,
-      host: account.host,
-      port: account.port,
-      tls: account.tls,
-      tlsOptions: { rejectUnauthorized: false },
+  onImapReady() {
+    console.log("Connection established.");
+    this.storeAccount().then(() => {
+      this.imap.openBox("INBOX", true, this.onOpenBox.bind(this)); // Open the INBOX in read-only mode
     });
+  }
 
-    imap.once("ready", function () {
-      openInbox(imap, async function (err, box) {
-        if (err) return reject(err);
-        console.log(`Total messages in inbox: ${box.messages.total}`);
+  onImapError(err) {
+    console.error("IMAP error:", err);
+    throw err;
+  }
 
-        const totalEmails = box.messages.total;
-        const start = (page - 1) * pageSize + 1;
-        const end = Math.min(start + pageSize - 1, totalEmails);
+  onImapEnd() {
+    console.log("Connection ended.");
+  }
 
-        const f = imap.seq.fetch(`${end}:${start}`, {
-          bodies: ["HEADER.FIELDS (FROM TO SUBJECT DATE)", "TEXT"],
-          struct: true,
+  onOpenBox(err) {
+    if (err) {
+      console.error("Error opening INBOX:", err);
+      throw err;
+    }
+    console.log("INBOX opened successfully.");
+
+    // Search for all emails in the INBOX
+    this.imap.search(["ALL"], this.onSearchResults.bind(this));
+  }
+
+  async onSearchResults(searchErr, results) {
+    if (searchErr) {
+      console.error("Error searching for emails:", searchErr);
+      throw searchErr;
+    }
+
+    console.log(`Fetched ${results.length} emails.`);
+
+    // Loop through search results and fetch email content along with flags
+    for (const seqno of results) {
+      const fetch = this.imap.fetch([seqno], {
+        bodies: "",
+        struct: true,
+        flags: true, // Fetch flags to determine if email is seen
+      });
+
+      fetch.on("message", (msg, seqno) => {
+        let isSeen = false; // Default to 'unseen'
+
+        msg.on("attributes", (attrs) => {
+          if (attrs.flags.includes("\\Seen")) {
+            isSeen = true; // Mark as 'seen' if the flag is present
+          }
         });
 
-        let emails = [];
+        msg.on("body", (stream) => {
+          simpleParser(stream, async (err, parsed) => {
+            if (err) {
+              console.error("Error parsing email:", err);
+              return; // Return early on error
+            }
 
-        f.on("message", function (msg, seqno) {
-          let bodyBuffer = "";
-          let emailData = {};
-
-          msg.on("body", function (stream, info) {
-            let buffer = "";
-            stream.on("data", function (chunk) {
-              buffer += chunk.toString("utf8");
-            });
-            stream.once("end", function () {
-              if (info.which === "TEXT") {
-                bodyBuffer = buffer;
-              } else {
-                const header = Imap.parseHeader(buffer);
-                emailData.from = header.from ? header.from[0] : "";
-                emailData.to = header.to ? header.to[0] : "";
-                emailData.subject = header.subject ? header.subject[0] : "";
-                emailData.date = new Date(header.date[0]);
-              }
-            });
-          });
-
-          msg.once("end", async function () {
+            // Check for existing email in the database
             try {
-              const parsed = await simpleParser(bodyBuffer);
-              emailData.bodyText = parsed.text || "";
-              const storedEmail = await storeEmailInDatabase(emailData);
-              emails.push({
-                id: storedEmail.id,
-                from: emailData.from,
-                to: emailData.to,
-                subject: emailData.subject,
-                date: emailData.date,
-                bodyText: emailData.bodyText,
+              const emailExists = await prisma.email.findUnique({
+                where: {
+                  subject_date_to_from_bodyText: {
+                    subject: parsed.subject || "No Subject",
+                    date: parsed.date || new Date(),
+                    to: parsed.to.text || "Unknown",
+                    from: parsed.from.text || "Unknown",
+                    bodyText: parsed.text || "",
+                  },
+                },
               });
+
+              // Save the email data if it doesn't exist
+              if (!emailExists) {
+                const emailData = {
+                  from: parsed.from.text || "Unknown",
+                  to: parsed.to.text || "Unknown",
+                  subject: parsed.subject || "No Subject",
+                  date: parsed.date || new Date(),
+                  bodyText: parsed.text || "",
+                  status: isSeen ? "seen" : "unseen", // Set the email status
+                  attachments: parsed.attachments
+                    ? parsed.attachments.map((att) => ({
+                        filename: att.filename || `attachment_${seqno}`,
+                        contentType: att.contentType,
+                        size: att.size,
+                      }))
+                    : [], // Store attachment details
+                };
+
+                await prisma.email.create({ data: emailData });
+                console.log(
+                  `Saved email ${seqno} to the database with status ${emailData.status}.`
+                );
+              } else {
+                console.log(
+                  `Email ${seqno} already exists in the database. Skipping.`
+                );
+              }
             } catch (error) {
-              console.error(`Error parsing or storing email:`, error);
+              console.error(`Error checking or saving email ${seqno}:`, error); // Log the full error object
+            }
+
+            // Check if email has attachments
+            if (parsed.attachments && parsed.attachments.length > 0) {
+              console.log(`Saving attachments from Email ${seqno}`);
+
+              parsed.attachments.forEach((attachment, index) => {
+                if (this.isSupportedAttachment(attachment)) {
+                  // Use the attachment's filename if available, otherwise create a default one
+                  const filename =
+                    attachment.filename ||
+                    `attachment_${seqno}_${index + 1}.${
+                      attachment.contentType.split("/")[1]
+                    }`;
+                  const fullDirPath = this.localFolderPath; // This can be modified based on your folder structure needs
+
+                  // Create the directory if it doesn't exist
+                  if (!fs.existsSync(fullDirPath)) {
+                    fs.mkdirSync(fullDirPath, { recursive: true }); // Create the base directory
+                  }
+
+                  // Save the attachment
+                  const filePath = `${fullDirPath}/${filename}`;
+                  fs.writeFileSync(filePath, attachment.content);
+                  console.log(`Saved attachment: ${filePath}`);
+                } else {
+                  console.log(
+                    `Skipped unsupported attachment: ${
+                      attachment.filename || "No filename"
+                    }`
+                  );
+                }
+              });
+            } else {
+              console.log(`No attachments found in Email ${seqno}.`);
             }
           });
         });
-
-        f.once("error", function (err) {
-          console.log("Fetch error: " + err);
-          reject(err);
-        });
-
-        f.once("end", function () {
-          imap.end();
-          resolve({ emails, totalEmails });
-        });
       });
-    });
+    }
 
-    imap.once("error", function (err) {
-      console.log(`Error with account ${account.user}: ` + err);
-      reject(err);
-    });
+    this.imap.end(); // End the IMAP connection after processing
+  }
 
-    imap.once("end", function () {
-      console.log(`Connection ended for ${account.user}`);
-    });
+  isSupportedAttachment(attachment) {
+    const supportedExtensions = ["pdf", "xlsx", "jpg", "zip", "rar", "docx"];
+    if (attachment.filename) {
+      const extension = attachment.filename.toLowerCase().split(".").pop();
+      return supportedExtensions.includes(extension);
+    }
+    return false;
+  }
 
-    imap.connect();
-  });
+  // Method to initiate the IMAP connection
+  start() {
+    this.imap.connect();
+  }
 }
+
+// Parse the email accounts from the environment variable
+const emailAccounts = JSON.parse(process.env.EMAIL_ACCOUNTS);
+
+// Local folder to save attachments
+const localFolderPath = "./attachments";
+
+// Initialize and start the MailAttachmentFetcher for each account
+emailAccounts.forEach((account) => {
+  const emailConfig = {
+    user: account.user,
+    password: account.password,
+    host: account.host,
+    port: 993,
+    tls: true,
+    tlsOptions: { rejectUnauthorized: false }, // Allow self-signed certificates
+  };
+
+  const mailFetcher = new MailAttachmentFetcher(emailConfig, localFolderPath);
+  mailFetcher.start();
+});

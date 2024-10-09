@@ -32,13 +32,40 @@ export default function EmailDetail() {
         ➡️ Back to Home
       </Link>
       <h1 className="font-bold text-2xl">{email.subject || "No Subject"}</h1>
-      <p><strong>From:</strong> {email.from}</p>
-      <p><strong>To:</strong> {email.to}</p>
-      <p><strong>Date:</strong> {new Date(email.date).toLocaleString()}</p>
+      <p>
+        <strong>From:</strong> {email.from}
+      </p>
+      <p>
+        <strong>To:</strong> {email.to}
+      </p>
+      <p>
+        <strong>Date:</strong> {new Date(email.date).toLocaleString()}
+      </p>
+
       <div className="mt-4">
         <h2 className="font-bold">Body:</h2>
         <p>{email.bodyText}</p>
       </div>
+
+      {/* Display attachments if they exist */}
+      {email.attachments && email.attachments.length > 0 && (
+        <div className="mt-4">
+          <h2 className="font-bold">Attachments:</h2>
+          <ul className="list-disc pl-5">
+            {email.attachments.map((attachment) => (
+              <li key={attachment.filename}>
+                <a
+                  href={`/attachments/${attachment.filename}`}
+                  className="text-blue-600 hover:underline"
+                  download
+                >
+                  {attachment.filename}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
