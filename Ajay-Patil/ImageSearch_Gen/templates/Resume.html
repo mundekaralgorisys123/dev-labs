@@ -87,6 +87,9 @@
     <!-- Main content area -->
     <div class="main-container">
         <h1>RESUME SUMERIZATION</h1>
+        {% if message2 %}
+        <h1 class="welcome-heading">{{ message2 }}</h1>
+        {% else %}
         <div class="form-section">
             <form method="POST" enctype="multipart/form-data" class="form" action="/resume">
                 <label class="file-label">
@@ -156,6 +159,7 @@
 
 
         </div>
+        {% endif %}
     </div>
 
     <script>

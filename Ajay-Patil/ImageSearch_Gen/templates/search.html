@@ -84,6 +84,9 @@
     <!-- Main content area -->
     <div class="main-container">
         <h1>SIMILARITY SEARCH</h1>
+        {% if message %}
+        <h1 class="welcome-heading">{{ message }}</h1>
+        {% else %}
         <div class="form-section">
             <form method="POST" enctype="multipart/form-data" class="form" action="/search">
                 <label class="file-label">
@@ -113,6 +116,7 @@
             </div>
             {% endif %}
         </div>
+        {% endif %}
     </div>
 
     <script>

@@ -86,6 +86,9 @@
     <div class="main-container">
         <div class="form-section">
             <h2>Generate or Transform Image</h2>
+            {% if message %}
+            <h1 class="welcome-heading">{{ message }}</h1>
+            {% else %}
             <form action="/generate" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="model">Stable Diffusion Checkpoints</label>
@@ -161,6 +164,7 @@
 
                 <button type="submit" class="btn mt-3">Generate/Transform</button>
             </form>
+            {% endif %}
         </div>
     </div>
 </body>

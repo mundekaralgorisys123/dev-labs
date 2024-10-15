@@ -88,6 +88,10 @@
     <div class="main-container">
         <div class="form-section">
             <h2>Resume Search</h2>
+            {% if message %}
+            <h1 class="welcome-heading">{{ message }}</h1>
+            {% else %}
+
             <form action="/askbot" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="resume">Upload Resume (PDF only)</label>
@@ -101,6 +105,7 @@
 
                 <button type="submit" class="btn btn-primary mt-3">Check</button>
             </form>
+            {% endif %}
 
         </div>
 

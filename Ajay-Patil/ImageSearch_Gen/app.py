@@ -121,33 +121,66 @@ def process_image(input_image):
     return output_io
 
 
-DEFAULT_FEATURES = ['Dashboard', 'Image Search', 'Image Generate', 'Resume Search', 'Resume summary']
+# DEFAULT_FEATURES = ['Dashboard', 'Image Search', 'Image Generate', 'Resume Search', 'Resume summary']
 # Function to read features from feature.txt, with a fallback to default features
+# def get_features():
+#     if not os.path.exists('feature.txt'):
+#         # If feature.txt doesn't exist, return default features
+#         return DEFAULT_FEATURES
+    
+#     with open('feature.txt', 'r') as file:
+#         features = [line.strip() for line in file.readlines() if line.strip()]
+    
+#     # If feature.txt is empty, return default features
+#     if not features:
+#         return DEFAULT_FEATURES
+
+#     return features
+
 def get_features():
     if not os.path.exists('feature.txt'):
-        # If feature.txt doesn't exist, return default features
-        return DEFAULT_FEATURES
+        # If feature.txt doesn't exist, return an empty list
+        return []
     
     with open('feature.txt', 'r') as file:
         features = [line.strip() for line in file.readlines() if line.strip()]
     
-    # If feature.txt is empty, return default features
+    # If feature.txt is empty, return an empty list
     if not features:
-        return DEFAULT_FEATURES
+        return []
 
     return features
-
 
 @app.route('/')
 def index():
     features = get_features()
-    print(features)
-    return render_template('index.html',features=features)
+    
+    # If no features are available, set a message
+    if not features:
+        message = "No features are available to be used"
+    else:
+        message = None
+
+    return render_template('index.html', features=features, message=message)
+
+
+# @app.route('/')
+# def index():
+#     features = get_features()
+#     print(features)
+#     return render_template('index.html',features=features)
 
 
 @app.route('/generate', methods=['POST','GET'])
 def generate_images():
     features = get_features()
+    if not features:
+        message = "No features are available to be used"
+    else:
+        message = None
+    
+    
+    
     if request.method == 'POST':
         try:
             # Extract form data
@@ -234,18 +267,23 @@ def generate_images():
                 )
                 image_urls = [image['url'] for image in response['data']]
 
-            return render_template('result.html', generated_images=generated_images, image_urls=image_urls,features=features)
+            return render_template('result.html', generated_images=generated_images, image_urls=image_urls,features=features,message=message)
 
         except ValueError as ve:
             return f"Invalid input: {str(ve)}", 400
         except Exception as e:
             return f"An error occurred: {str(e)}", 500
     else:
-        return render_template('generate.html',sampling_method=prodia_client.list_samplers(), model_names=model_names,features=features)
+        return render_template('generate.html',sampling_method=prodia_client.list_samplers(), model_names=model_names,features=features,message=message)
     
 @app.route('/search', methods=['GET', 'POST'])
 def search_image():
     features2 = get_features()
+    if not features2:
+        message = "No features are available to be used"
+    else:
+        message = None
+        
     if request.method == 'POST':  # If the form is submitted (via POST request)
         file = request.files['query_img']  # Get the uploaded image file from the request
         img = Image.open(file.stream)  # Open the uploaded image using PIL
@@ -258,7 +296,7 @@ def search_image():
 
         return render_template('search.html', query_path=image_to_base64_str(img), scores=scores,features=features2)  # Pass base64 image string
     else:
-        return render_template('search.html', query_path=None, scores=None,features=features2)  # Render the default homepage on GET request
+        return render_template('search.html', query_path=None, scores=None,features=features2,message=message)  # Render the default homepage on GET request
 
 # =========================================================================================
                                     # !Roshan
@@ -278,6 +316,11 @@ def _read_file_from_path(path):
 @app.route('/resume', methods=['GET', 'POST'])
 def resume():
     features = get_features()
+    if not features:
+        message2 = "No features are available to be used"
+    else:
+        message2 = None
+     
     if request.method == 'POST':
         if 'query_pdf' not in request.files:
             return render_template('Resume.html', error="No file part")
@@ -306,7 +349,7 @@ def resume():
         else:
             return render_template('Resume.html', error="Please upload a valid PDF file",features=features)
 
-    return render_template('Resume.html',features=features)  # For GET request
+    return render_template('Resume.html',features=features,message2=message2)  # For GET request
 
 
 
@@ -314,8 +357,12 @@ def resume():
 @app.route('/Research')
 def Research():
     features = get_features()
+    if not features:
+        message = "No features are available to be used"
+    else:
+        message = None
      
-    return render_template('Research.html',features=features)
+    return render_template('Research.html',features=features,message=message)
 
 
 @app.route('/askbot', methods=['POST'])

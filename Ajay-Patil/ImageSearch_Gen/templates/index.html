@@ -89,8 +89,11 @@
 
     <!-- Main content area -->
     <div class="main-content">
+        {% if message %}
         <h1 class="welcome-heading">Hello, Welcome!</h1>
         <p class="description">What would you like to do today?</p>
+        <h1 class="welcome-heading">{{ message }}</h1>
+        {% else %}
 
         <div class="navigation-cards">
             <div class="nav-card" onclick="window.location.href='/search'">
@@ -110,6 +113,7 @@
                 <p>Ask Questions on a Resume.</p>
             </div>
         </div>
+        {% endif %}
 
     </div>
 </body>
