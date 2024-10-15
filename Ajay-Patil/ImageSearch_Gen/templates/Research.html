@@ -26,49 +26,50 @@
     </div> -->
     <div class="navigation">
         <ul>
+            {% if 'Dashboard' in features %}
             <li>
                 <a href="/">
                     <span class="icon"><i class="fa-solid fa-house"></i></span>
                     <span class="title">Dashboard</span>
                 </a>
             </li>
+            {% endif %}
 
+            {% if 'Image Search' in features %}
             <li>
                 <a href="/search">
                     <span class="icon"><i class="fa-solid fa-image"></i></span>
                     <span class="title">Image Search</span>
                 </a>
             </li>
+            {% endif %}
+
+            {% if 'Image Generate' in features %}
             <li>
                 <a href="/generate">
                     <span class="icon"><i class="fa-solid fa-image"></i></span>
                     <span class="title">Image Generate</span>
                 </a>
             </li>
-            <li>
-                <a href="/resume">
-                    <span class="icon"><i class="fa-solid fa-file-alt"></i></span>
-                    <span class="title">Resume summary</span>
-                </a>
-            </li>
+            {% endif %}
+
+            {% if 'Resume Search' in features %}
             <li>
                 <a href="/Research">
                     <span class="icon"><i class="fa-solid fa-search"></i></span>
                     <span class="title">Resume Search</span>
                 </a>
             </li>
-            <!-- <li>
-            <a href="#">
-              <span class="icon"><i class="fa-solid fa-lock"></i></span>
-              <span class="title">Password</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>
-              <span class="title">SignOut</span>
-            </a>
-          </li> -->
+            {% endif %}
+
+            {% if 'Resume summary' in features %}
+            <li>
+                <a href="/resume">
+                    <span class="icon"><i class="fa-solid fa-file-alt"></i></span>
+                    <span class="title">Resume summary</span>
+                </a>
+            </li>
+            {% endif %}
         </ul>
     </div>
 

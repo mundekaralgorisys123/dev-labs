@@ -2,7 +2,7 @@ import random
 import numpy as np
 import os
 import openai
-from flask import request, Flask, render_template
+from flask import request, Flask, render_template,abort
 from PIL import Image
 from feature_extractor import FeatureExtractor  # Importing feature extraction class
 from datetime import datetime 
@@ -26,6 +26,11 @@ app = Flask(__name__)
 
 
 UPLOAD_FOLDER = 'static/uploads'  # Change this to your desired upload directory
+
+
+
+
+
 
 # Ensure the upload directory exists
 if not os.path.exists(UPLOAD_FOLDER):
@@ -116,16 +121,33 @@ def process_image(input_image):
     return output_io
 
 
-from flask import Flask, render_template, request
+DEFAULT_FEATURES = ['Dashboard', 'Image Search', 'Image Generate', 'Resume Search', 'Resume summary']
+# Function to read features from feature.txt, with a fallback to default features
+def get_features():
+    if not os.path.exists('feature.txt'):
+        # If feature.txt doesn't exist, return default features
+        return DEFAULT_FEATURES
+    
+    with open('feature.txt', 'r') as file:
+        features = [line.strip() for line in file.readlines() if line.strip()]
+    
+    # If feature.txt is empty, return default features
+    if not features:
+        return DEFAULT_FEATURES
 
-app = Flask(__name__)
+    return features
+
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    features = get_features()
+    print(features)
+    return render_template('index.html',features=features)
+
 
 @app.route('/generate', methods=['POST','GET'])
 def generate_images():
+    features = get_features()
     if request.method == 'POST':
         try:
             # Extract form data
@@ -212,17 +234,18 @@ def generate_images():
                 )
                 image_urls = [image['url'] for image in response['data']]
 
-            return render_template('result.html', generated_images=generated_images, image_urls=image_urls)
+            return render_template('result.html', generated_images=generated_images, image_urls=image_urls,features=features)
 
         except ValueError as ve:
             return f"Invalid input: {str(ve)}", 400
         except Exception as e:
             return f"An error occurred: {str(e)}", 500
     else:
-        return render_template('generate.html',sampling_method=prodia_client.list_samplers(), model_names=model_names)
+        return render_template('generate.html',sampling_method=prodia_client.list_samplers(), model_names=model_names,features=features)
     
 @app.route('/search', methods=['GET', 'POST'])
 def search_image():
+    features2 = get_features()
     if request.method == 'POST':  # If the form is submitted (via POST request)
         file = request.files['query_img']  # Get the uploaded image file from the request
         img = Image.open(file.stream)  # Open the uploaded image using PIL
@@ -233,9 +256,9 @@ def search_image():
         ids = np.argsort(dists)[1:6]  # Get the indices of the top 40 closest (most similar) images based on distance
         scores = [(dists[id], img_paths[id]) for id in ids]  # Pair distances with image paths for top results
 
-        return render_template('search.html', query_path=image_to_base64_str(img), scores=scores)  # Pass base64 image string
+        return render_template('search.html', query_path=image_to_base64_str(img), scores=scores,features=features2)  # Pass base64 image string
     else:
-        return render_template('search.html', query_path=None, scores=None)  # Render the default homepage on GET request
+        return render_template('search.html', query_path=None, scores=None,features=features2)  # Render the default homepage on GET request
 
 # =========================================================================================
                                     # !Roshan
@@ -254,6 +277,7 @@ def _read_file_from_path(path):
 
 @app.route('/resume', methods=['GET', 'POST'])
 def resume():
+    features = get_features()
     if request.method == 'POST':
         if 'query_pdf' not in request.files:
             return render_template('Resume.html', error="No file part")
@@ -278,23 +302,25 @@ def resume():
             data=json.loads(extracted_data)
             print(data)
             
-            return render_template('Resume.html', message="File uploaded successfully!", data=data)
+            return render_template('Resume.html', message="File uploaded successfully!", data=data,features=features)
         else:
-            return render_template('Resume.html', error="Please upload a valid PDF file")
+            return render_template('Resume.html', error="Please upload a valid PDF file",features=features)
 
-    return render_template('Resume.html')  # For GET request
+    return render_template('Resume.html',features=features)  # For GET request
 
 
 
 
 @app.route('/Research')
 def Research():
-    
-    return render_template('Research.html')
+    features = get_features()
+     
+    return render_template('Research.html',features=features)
 
 
 @app.route('/askbot', methods=['POST'])
 def askbot():
+    features = get_features()
     if request.method == 'POST':
         # Get the uploaded file
         uploaded_file = request.files.get('resume')
@@ -316,7 +342,7 @@ def askbot():
                 answer = get_openai_answer(extracted_text, search_phrase)
                 print(search_phrase)
                 print(answer)
-                return render_template('Research.html', question=search_phrase, answer=answer)
+                return render_template('Research.html', question=search_phrase, answer=answer,features=features)
                 
                 
             else:
@@ -324,7 +350,7 @@ def askbot():
         else:
             return "Invalid file type. Please upload a PDF.", 400
         
-    return render_template('Research.html')
+    return render_template('Research.html',features=features)
 
 
 

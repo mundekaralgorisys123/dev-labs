@@ -1,19 +1,18 @@
 import openai
 import fitz  # PyMuPDF
-import os
-from dotenv import load_dotenv
-# Set OpenAI API key
-# Load environment variables from .env file
-load_dotenv()
+import yaml
+# Load the API key from the config.yaml file
+def load_config(config_path):
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config['openai']['api_key']
 
-# Fetch the API key from the environment variable
-api_key = os.getenv("OPENAI_API_KEY")
+# Path to your config file
+CONFIG_PATH = "config.yaml"
 
-if not api_key:
-    raise ValueError("OpenAI API key not found. Ensure that it is set in the .env file.")
-
-# Set the API key for OpenAI
-openai.api_key = api_key
+# Load the API key
+api_key = load_config(CONFIG_PATH)
+openai.api_key = api_key  # Set the API key for OpenAI
 
 # Function to extract text from the PDF using PyMuPDF
 def extract_text_from_pdf(pdf_path):

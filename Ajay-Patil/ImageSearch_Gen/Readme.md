@@ -1,4 +1,4 @@
-# Image Search Processing and Resume Management System
+# Image Processing and Resume Management System
 
 ## Overview
 This project implements the following functionalities:
