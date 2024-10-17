@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saarthi - AI Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/home.css">
+    <style>
+        /* Body and General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #5c13e4;
+            color: white;
+        }
+
+        .container1 {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Form Section */
+        .form-section {
+            background-color: #ffffff;
+            /* White background */
+            padding: 30px;
+            /* Padding inside the form */
+            border-radius: 8px;
+            /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow for depth */
+
+            /* Maximum width for the form */
+            width: 100%;
+            /* Full width within the max width */
+        }
+
+        .form-label {
+            text-align: left;
+            margin-right: 330px;
+            /* Align text to the left */
+            margin-bottom: 5px;
+            /* Space below the label */
+        }
+
+        /* Form Heading */
+        .form-section h2 {
+            margin-bottom: 20px;
+            /* Space below the heading */
+            text-align: center;
+            /* Center the heading text */
+            color: #343a40;
+            /* Dark text color */
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            /* White background */
+            padding: 30px;
+            /* Padding inside the form */
+            border-radius: 8px;
+            /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow for depth */
+            max-width: 500px;
+            /* Maximum width for the form */
+            width: 100%;
+            margin-left: 350px;
+            /* Full width within the max width */
+        }
+
+        /* Form Label */
+        .form-label {
+            text-align: left;
+            /* Align text to the left */
+            margin-bottom: 5px;
+            /* Space below the label */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+                /* Adjust padding for smaller screens */
+            }
+
+            .form-control {
+                font-size: 14px;
+                /* Adjust font size for smaller screens */
+            }
+        }
+
+        /* Image Previews */
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            /* Allow items to wrap */
+            justify-content: center;
+            /* Center align items */
+            margin-top: 10px;
+            /* Space above previews */
+        }
+
+        .preview-item {
+            display: inline-block;
+            margin: 10px;
+            /* Space between preview items */
+            position: relative;
+            max-width: 150px;
+            /* Increase maximum width for preview items */
+            max-height: 150px;
+            /* Optional: Set a max height for uniformity */
+        }
+
+        .preview-image {
+            max-width: 100%;
+            /* Ensure the image scales with the container */
+            max-height: 100%;
+            /* Limit height to prevent overflow */
+            height: auto;
+            /* Maintain aspect ratio */
+            border: 2px solid #ddd;
+            /* Border around preview images */
+            border-radius: 5px;
+            /* Rounded corners */
+        }
+
+
+        .remove-image {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background-color: red;
+            /* Red background for the button */
+            color: white;
+            /* White text color */
+            border: none;
+            /* No border */
+            border-radius: 50%;
+            /* Circular button */
+            width: 20px;
+            /* Button width */
+            height: 20px;
+            /* Button height */
+            font-size: 16px;
+            /* Font size for the X icon */
+            cursor: pointer;
+            /* Pointer cursor on hover */
+            display: flex;
+            /* Center the X icon */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Media Query for smaller screens */
+        @media (max-width: 600px) {
+            .preview-item {
+                max-width: 80px;
+                /* Smaller max width for smaller screens */
+            }
+
+            .remove-image {
+                width: 18px;
+                /* Adjust button size */
+                height: 18px;
+                /* Adjust button size */
+                font-size: 14px;
+                /* Smaller font size */
+            }
+
+            .form-section {
+                padding: 15px;
+                /* Reduced padding on smaller screens */
+                margin: 10px;
+                /* Margin for spacing */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+
+
+        <h1>Powerful AI Solutions with Saarthi</h1> <br>
+
+        <a href="/" class="primary-btn">Start Your Free Trial</a>
+
+    </section>
+
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="form-section">
+            <h2>UPLOAD BULKS OF IMAGES</h2>
+            <div class="container1 mt-5">
+                <div class="form-container">
+                    <form id="uploadForm" method="POST" enctype="multipart/form-data">
+                        <!-- Folder Name Input -->
+                        <div class="mb-3">
+                            <label for="folderName" class="form-label">Folder Name</label>
+                            <input type="text" class="form-control" id="folderName" name="folder_name"
+                                placeholder="Enter folder name" required>
+                        </div>
+                        <!-- Image File Input -->
+                        <div class="mb-3">
+                            <label for="images" class="form-label">Upload Images</label>
+                            <input type="file" class="form-control" id="images" name="images[]" accept="image/*"
+                                multiple required>
+                        </div>
+                        <!-- Upload Button -->
+                        <button type="submit" class="btn btn-primary w-100">Upload</button>
+                        <!-- Image Previews -->
+
+                    </form>
+                </div>
+                <div class="preview-container mt-3" id="previewContainer">
+                    <!-- Image previews will appear here -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const form = document.getElementById('uploadForm');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagesInput = document.getElementById('images');
+
+        // Image preview logic
+        // Image preview logic
+        imagesInput.addEventListener('change', function () {
+            previewContainer.innerHTML = ''; // Clear previous previews
+            const files = Array.from(imagesInput.files);
+
+            files.forEach((file, index) => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.classList.add('preview-item');
+
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.classList.add('preview-image');
+
+                        // Create a remove button
+                        const removeButton = document.createElement('button');
+                        removeButton.innerHTML = 'X'; // The text for the button
+                        removeButton.classList.add('remove-image');
+                        removeButton.onclick = function () {
+                            // Remove the image from the preview
+                            previewContainer.removeChild(previewItem);
+                            // Also remove the corresponding file from the FileList
+                            const dataTransfer = new DataTransfer();
+                            const updatedFiles = Array.from(imagesInput.files);
+                            updatedFiles.splice(index, 1); // Remove the file at the current index
+                            updatedFiles.forEach(file => dataTransfer.items.add(file)); // Add back remaining files
+                            imagesInput.files = dataTransfer.files; // Update input with new FileList
+                        };
+
+                        previewItem.appendChild(img);
+                        previewItem.appendChild(removeButton);
+                        previewContainer.appendChild(previewItem);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // Handle form submission
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/upload_im', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        title: 'Upload successful!',
+                        text: 'Do you want to train the model with this folder?',
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonText: 'Train Model',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Call function to train the model and show progress bar
+                            startModelTraining(formData.get('folder_name'));
+                        }
+                    });
+                } else {
+                    Swal.fire('Error', 'Failed to upload images.', 'error');
+                }
+            } catch (error) {
+                Swal.fire('Error', error.message, 'error');
+            }
+        });
+
+        // Start model training
+        async function startModelTraining(folderName) {
+            // Show initial progress
+            const progressHtml = '<div style="width: 100%; background-color: #f3f3f3;"><div id="progress-bar" class="progress-bar" style="width: 0%; height: 20px; background-color: #4caf50;"></div></div>';
+
+            const trainingAlert = Swal.fire({
+                title: 'Training Model...',
+                html: progressHtml,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    checkTrainingStatus();
+                }
+            });
+
+            // Poll the server for training status
+            async function checkTrainingStatus() {
+                const interval = setInterval(async () => {
+                    try {
+                        const statusResponse = await fetch('/training_status');
+                        const statusData = await statusResponse.json();
+
+                        if (statusData.status === 'in-progress') {
+                            // Simulate progress bar update (in a real scenario, you would update this based on actual progress)
+                            const progressBar = document.getElementById('progress-bar');
+                            progressBar.style.width = (parseInt(progressBar.style.width) + 10) + '%'; // Simulate progress increment
+                        } else if (statusData.status === 'completed') {
+                            clearInterval(interval);
+                            Swal.fire('Success!', 'Model training completed.', 'success').then(() => {
+                                // Clear the form fields and previews after training completion
+                                form.reset();  // Resets all form fields
+                                previewContainer.innerHTML = '';  // Clear image previews
+                                const progressBar = document.getElementById('progress-bar');
+                                progressBar.style.width = '0%';  // Reset progress bar for next use
+                            });
+                        }
+                    } catch (error) {
+                        clearInterval(interval);
+                        Swal.fire('Error', error.message, 'error');
+                    }
+                }, 1000); // Check status every second
+            }
+
+            // Start the training process by sending a request to the server
+            try {
+                const response = await fetch('/train_model', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ folder_name: folderName }),
+                });
+
+                if (!response.ok) {
+                    Swal.fire('Error', 'Failed to start model training.', 'error');
+                }
+            } catch (error) {
+                Swal.fire('Error', error.message, 'error');
+            }
+        }
+    </script>
+
+
+
+
+
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Saarthi. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
