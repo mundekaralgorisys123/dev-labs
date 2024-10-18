@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saarthi - AI Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../static/styles/home.css" />
+  <link rel="stylesheet" href="../static/styles/search.css" />
+  <!-- <style>
+    /* Body and General Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 50px 20px;
+      background-color: #5c13e4;
+      color: white;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 40px 20px;
+      background-color: white;
+      border-radius: 5px;
+
+      margin: 20px auto;
+
+    }
+
+    /* Form Section */
+    .form-section {
+      max-width: 400px;
+      /* Set a maximum width for the form */
+      width: 100%;
+      /* Full width within the max width */
+      padding: 20px;
+      /* Padding inside the form */
+      border-radius: 5px;
+      /* Rounded corners */
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      /* Subtle shadow for depth */
+      background-color: rgb(245, 234, 234);
+
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .form-section {
+        width: 90%;
+        /* Take up 90% of the viewport width on smaller screens */
+        margin: 20px auto;
+        /* Center with margin */
+      }
+    }
+
+
+
+    /* Form Styling */
+    .form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* File Input Styling */
+    .file-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-label-text {
+      padding: 10px;
+      border: 2px solid #007BFF;
+      border-radius: 5px;
+      background-color: #f8f9fa;
+      cursor: pointer;
+      flex-grow: 1;
+      text-align: center;
+      transition: background-color 0.2s;
+    }
+
+    .file-label-text:hover {
+      background-color: #e2e6ea;
+    }
+
+    .btn {
+      padding: 10px;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .form-section {
+        width: 90%;
+        /* Take up 90% of the viewport width on smaller screens */
+        margin: 20px auto;
+        /* Center with margin */
+      }
+    }
+
+    /* Query Image Styling */
+    .query-image {
+      max-width: 300px;
+      /* Ensure it doesn't exceed the width of its container */
+      max-height: 300px;
+      /* Set a maximum height */
+      height: auto;
+      /* Maintain aspect ratio */
+      margin: 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      object-fit: contain;
+      /* Ensure the image scales properly */
+    }
+
+    /* Ensure the image grid is responsive */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 78px;
+      padding: 20px;
+      justify-items: center;
+    }
+
+    .image-item {
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .image-item figure {
+      margin: 0;
+      padding: 0;
+    }
+
+    .image-item img {
+      width: 250px;
+      /* Set a fixed width for all images */
+      height: 250px;
+      /* Set a fixed height for all images */
+      border-radius: 8px;
+      object-fit: cover;
+      /* Ensure images cover the entire area without stretching */
+    }
+
+    figcaption {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .testimonials-images {
+      display: block;
+    }
+
+    .test-image-grid {
+      margin: inherit;
+    }
+  </style> -->
+</head>
+
+<body>
+  <!-- NAVIGATION MENU -->
+  <nav>
+    <div class="container">
+      <div class="logo" onclick="window.location.href='/'">
+        <img src="../static/img/saarthi_logo.png" alt="Saarthi" />
+        <div>
+          <h1>SAARTHI</h1>
+          <h3>
+            System for Automated Analysis Response, Task Handling, and
+            Intelligence
+          </h3>
+        </div>
+      </div>
+      <!-- Mobile menu -->
+      <ul class="mobile-menu">
+        <li onclick="hideNavMenu()" class="btn">
+          <a href="#" class="close-menu"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 96 960 960"
+              width="26">
+              <path
+                d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z" />
+            </svg>
+          </a>
+        </li>
+        <li><a href="#">features</a></li>
+        <li><a href="#">benefits</a></li>
+        <li><a href="#">testimonials</a></li>
+        <li><a href="#">pricing</a></li>
+        <li><a href="#">signin</a></li>
+        <li><a href="#">signup</a></li>
+      </ul>
+      <a href="#" class="menu-button" onclick="showNavMenu()"><svg xmlns="http://www.w3.org/2000/svg" height="26"
+          viewBox="0 96 960 960" width="26">
+          <path fill="#ffffff" d="M120 816v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z" />
+        </svg>
+      </a>
+      <!-- Nav menu for large screens -->
+      <ul class="hideOnMobile">
+        <li><a href="#">features</a></li>
+        <li><a href="#">benefits</a></li>
+        <li><a href="#">testimonials</a></li>
+        <li><a href="#">pricing</a></li>
+        <li><a href="#">signin</a></li>
+        <li><a href="#">signup</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <h2>SEARCH SIMILAR IMAGES</h2>
+    <div class="feature-grid">
+      <div class="form-section">
+        <div class="center">
+          <form method="POST" enctype="multipart/form-data" class="form" action="/search">
+            <label class="file-label">
+              <input type="file" name="query_img" class="file-input" accept="image/*" onchange="updateFileName(this)"
+                required>
+              <span class="file-label-text">Choose an image...</span>
+            </label>
+            <input type="submit" value="Search" class="btn">
+          </form>
+        </div>
+      </div>
+
+
+    </div>
+    <!-- Display Query and Similar Images only if query_path or scores exist -->
+    {% if query_path %}
+    <h4 class="mt-10">ORIGINAL IMAGE:</h4>
+    <img src="data:image/png;base64, {{ query_path }}" alt="Query Image" class="query-image">
+    {% endif %}
+  </section>
+
+
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="testimonials">
+    {% if scores %}
+    <div class="container testimonials-images">
+      <!-- <h2>Showing Similar Images</h2> -->
+
+      <div class="image-grid test-image-grid">
+        {% for score in scores %}
+        <div class="image-item">
+          <figure>
+            <img src="{{ score[1] }}" alt="Similar Image">
+            <figcaption>{{ score[0] }}</figcaption>
+          </figure>
+        </div>
+        {% endfor %}
+      </div>
+
+
+
+    </div>
+    {% endif %}
+  </section>
+
+ 
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 Saarthi. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- *********************************** -->
+  <script>
+    function updateFileName(input) {
+      const fileName = input.files[0]?.name || 'Choose an image...';
+      const label = input.nextElementSibling;
+      label.textContent = fileName;
+    }
+  </script>
+  <!-- *********************************** -->
+  <!-- *********************************** -->
+  <!-- SCRIPT FOR NAVIGATION MENU -->
+  <script>
+    function showNavMenu() {
+      const navMenu = document.querySelector(".mobile-menu");
+      navMenu.style.display = "flex";
+    }
+    function hideNavMenu() {
+      const navMenu = document.querySelector(".mobile-menu");
+      navMenu.style.display = "none";
+    }
+  </script>
+</body>
+
+</html>

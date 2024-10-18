@@ -1,0 +1,181 @@
+.container1 {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Form Section */
+  .form-section {
+    background-color: #ffffff;
+    /* White background */
+    padding: 30px;
+    /* Padding inside the form */
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+
+    /* Maximum width for the form */
+    width: 100%;
+    /* Full width within the max width */
+  }
+
+  .form-label {
+    text-align: left;
+    margin-right: 330px;
+    /* Align text to the left */
+    margin-bottom: 5px;
+    /* Space below the label */
+  }
+
+  /* Form Heading */
+  .form-section h2 {
+    margin-bottom: 20px;
+    /* Space below the heading */
+    text-align: center;
+    /* Center the heading text */
+    color: #343a40;
+    /* Dark text color */
+  }
+
+  .form-container {
+    background-color: #ffffff;
+    /* White background */
+    padding: 30px;
+    /* Padding inside the form */
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    max-width: 500px;
+    /* Maximum width for the form */
+    width: 100%;
+    margin-left: 350px;
+    /* Full width within the max width */
+  }
+
+  /* Form Label */
+  .form-label {
+    text-align: left;
+    /* Align text to the left */
+    margin-bottom: 5px;
+    /* Space below the label */
+  }
+
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .form-container {
+      padding: 20px;
+      /* Adjust padding for smaller screens */
+    }
+
+    .form-control {
+      font-size: 14px;
+      /* Adjust font size for smaller screens */
+    }
+  }
+
+  /* Image Previews */
+  .preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allow items to wrap */
+    justify-content: center;
+    /* Center align items */
+    margin-top: 10px;
+    /* Space above previews */
+  }
+
+  .preview-item {
+    display: inline-block;
+    margin: 10px;
+    /* Space between preview items */
+    position: relative;
+    max-width: 150px;
+    /* Increase maximum width for preview items */
+    max-height: 150px;
+    /* Optional: Set a max height for uniformity */
+  }
+
+
+
+  /* Style for individual images */
+  .preview-image {
+    width: 100%;
+    /* Full width of the grid item */
+    height: 100px;
+    /* Fixed height for all images */
+    object-fit: cover;
+    /* Ensures the image covers the container while maintaining aspect ratio */
+    border: 2px solid white;
+    /* Border around preview images */
+    border-radius: 5px;
+    /* Rounded corners */
+  }
+
+  /* For mobile screens, adjust the height if necessary */
+  @media (max-width: 600px) {
+    .preview-image {
+      height: 150px;
+      /* Smaller height for mobile screens */
+    }
+  }
+
+
+
+
+  .remove-image {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: red;
+    /* Red background for the button */
+    color: white;
+    /* White text color */
+    border: none;
+    /* No border */
+    border-radius: 50%;
+    /* Circular button */
+    width: 20px;
+    /* Button width */
+    height: 20px;
+    /* Button height */
+    font-size: 16px;
+    /* Font size for the X icon */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    display: flex;
+    /* Center the X icon */
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Media Query for smaller screens */
+  @media (max-width: 600px) {
+    .preview-item {
+      max-width: 80px;
+      /* Smaller max width for smaller screens */
+    }
+
+    .remove-image {
+      width: 18px;
+      /* Adjust button size */
+      height: 18px;
+      /* Adjust button size */
+      font-size: 14px;
+      /* Smaller font size */
+    }
+
+    .form-section {
+      padding: 15px;
+      /* Reduced padding on smaller screens */
+      margin: 10px;
+      /* Margin for spacing */
+    }
+  }
+  .upload-btn{
+    background-color: #6a0dad;
+  }

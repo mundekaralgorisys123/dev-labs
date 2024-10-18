@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saarthi - AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../static/styles/home.css" />
+  </head>
+  <body>
+    <!-- NAVIGATION MENU -->
+    <nav>
+      <div class="container">
+        <div class="logo">
+          <img src="../static/img/saarthi_logo.png" alt="Saarthi" />
+          <div>
+            <h1>SAARTHI</h1>
+            <h3>
+              System for Automated Analysis Response, Task Handling, and
+              Intelligence
+            </h3>
+          </div>
+        </div>
+        <!-- Mobile menu -->
+        <ul class="mobile-menu">
+          <li onclick="hideNavMenu()" class="btn">
+            <a href="#" class="close-menu"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="26"
+                viewBox="0 96 960 960"
+                width="26"
+              >
+                <path
+                  d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li><a href="#">features</a></li>
+          <li><a href="#">benefits</a></li>
+          <li><a href="#">testimonials</a></li>
+          <li><a href="#">pricing</a></li>
+          <li><a href="#">signin</a></li>
+          <li><a href="#">signup</a></li>
+        </ul>
+        <a href="#" class="menu-button" onclick="showNavMenu()"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="26"
+            viewBox="0 96 960 960"
+            width="26"
+          >
+            <path
+              fill="#ffffff"
+              d="M120 816v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"
+            />
+          </svg>
+        </a>
+        <!-- Nav menu for large screens -->
+        <ul class="hideOnMobile">
+          <li><a href="#">features</a></li>
+          <li><a href="#">benefits</a></li>
+          <li><a href="#">testimonials</a></li>
+          <li><a href="#">pricing</a></li>
+          <li><a href="#">signin</a></li>
+          <li><a href="#">signup</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Powerful AI Solutions with Saarthi</h1>
+      <br />
+      <p>
+        Transform your document and image management with our all-in-one
+        AI-driven assistant.
+      </p>
+      <a href="#" class="primary-btn">Start Your Free Trial</a>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+      <h2>Key Features of Saarthi</h2>
+      <div class="feature-grid">
+        <div class="feature-item" onclick="window.location.href='/upload_images'">
+          <h3>Upload Multiple Documents</h3>
+          <p>
+            Manage all your documents in one place with AI-powered
+            categorization and analysis.
+          </p>
+        </div>
+        <div class="feature-item" onclick="window.location.href='/search'">
+          <h3>AI Image Search</h3>
+          <p>
+            Quickly find similar images with our advanced AI image search
+            capabilities.
+          </p>
+        </div>
+        <div class="feature-item">
+          <h3>Generate Resume Summary (coming soon..)</h3>
+          <p>
+            Utilize AI to find relevant resumes with just a few clicks,
+            simplifying your recruitment process.
+          </p>
+        </div>
+        <!-- <div class="feature-item">
+          <h3>Generate Resume Summary</h3>
+          <p>
+            Let AI create professional, concise summaries of resumes to save
+            time and improve decision-making.
+          </p>
+        </div> -->
+      </div>
+    </section>
+
+    <!-- Benefit Showcase -->
+    <section id="benefits" class="benefit-showcase">
+      <div class="container">
+        <div class="benefits primary-benefits">
+          <h2>How Saarthi Benefits You</h2>
+          <p>
+            Our AI solutions give you an edge over your competition by
+            optimizing your processes and reducing time spent on manual tasks.
+          </p>
+        </div>
+        <div class="benefits secondary-benefits">
+          <h2>Secondary Benefit Showcase</h2>
+          <p>
+            Help your team become more efficient and productive with AI that
+            scales to your business needs.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+          <h2>What Our Users Say</h2>
+          <div class="testimonial-grid">
+            <div class="testimonial-item">
+              <span class="quote"><i class="fa fa-quote-left"></i></span>
+              <p>
+                "Saarthi has revolutionized our document management process,
+                saving us countless hours."
+              </p>
+              <h4>- Alex T.</h4>
+            </div>
+            <div class="testimonial-item">
+              <span class="quote"><i class="fa fa-quote-left"></i></span>
+              <p>
+                "The AI resume engine is a lifesaver for our recruitment efforts,
+                making hiring faster and more efficient."
+              </p>
+              <h4>- Priya R.</h4>
+            </div>
+            <div class="testimonial-item">
+              <span class="quote"><i class="fa fa-quote-left"></i></span>
+              <p>
+                "Incredible AI features that streamline our business operations."
+              </p>
+              <h4>- John M.</h4>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Call to Action Section -->
+      <section id="cta" class="cta">
+        <div class="container">
+          <div class="cta-text">
+            <h2>Start Your Free Trial Today</h2>
+            <p>
+              Sign up now and experience the power of AI with Saarthi,
+              <p>free for 30  days.</p>
+            </p>
+          </div>
+  
+          <form action="#" class="cta-form">
+            <input type="text" placeholder="Full Name" required />
+            <input type="email" placeholder="Email Address" required />
+            <input type="password" placeholder="Password" required />
+            <button type="submit" class="primary-btn">
+              Get Started for Free
+            </button>
+          </form>
+        </div>
+      </section>
+  
+      <!-- Footer Section -->
+      <footer class="footer">
+        <div class="container">
+          <p>&copy; 2024 Saarthi. All rights reserved.</p>
+        </div>
+      </footer>
+
+    <!-- *********************************** -->
+    <!-- SECTIONS END -->
+    <!-- *********************************** -->
+    <!-- *********************************** -->
+    <!-- SCRIPT FOR NAVIGATION MENU -->
+    <script>
+      function showNavMenu() {
+        const navMenu = document.querySelector(".mobile-menu");
+        navMenu.style.display = "flex";
+      }
+      function hideNavMenu() {
+        const navMenu = document.querySelector(".mobile-menu");
+        navMenu.style.display = "none";
+      }
+    </script>
+  </body>
+</html>
